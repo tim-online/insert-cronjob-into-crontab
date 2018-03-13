@@ -26,14 +26,14 @@ func main() {
 	a.Usage = "sync journal reports to local database"
 	a.Action = func(c *cli.Context) error {
 		alias := c.String("alias")
-		cronjob := c.String("cronjob")
+		cronjobs := c.StringSlice("cronjob")
 
-		if alias == "" || cronjob == "" {
+		if alias == "" || len(cronjobs) == 0 {
 			err := errors.New("Both --alias and --cronjob are required")
 			return cli.NewExitError(err, 1)
 		}
 
-		err := app.Run(alias, cronjob)
+		err := app.Run(alias, cronjobs)
 		if err != nil {
 			return cli.NewExitError(err, 1)
 		}
@@ -44,7 +44,7 @@ func main() {
 			Name:  "alias",
 			Usage: "The alias to uniquely identify the cronjob",
 		},
-		cli.StringFlag{
+		cli.StringSliceFlag{
 			Name:  "cronjob",
 			Usage: "The cronjob line itself",
 		},

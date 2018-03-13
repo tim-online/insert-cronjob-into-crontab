@@ -64,11 +64,14 @@ func (a *App) setLogger(log *logger.Logger) error {
 	return nil
 }
 
-func (a *App) Run(alias string, cronLine string) error {
-	err := checkCronLine(cronLine)
-	if err != nil {
-		return err
+func (a *App) Run(alias string, cronLines []string) error {
+	for _, cronLine := range cronLines {
+		err := checkCronLine(cronLine)
+		if err != nil {
+			return err
+		}
 	}
+	cronLine := cronLines[0]
 
 	// stdin is "just" a file so stat it
 	stdin := os.Stdin
